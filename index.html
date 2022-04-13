@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://unpkg.com/v-tooltip"></script>
+    <title>Build Simulator</title>
+    <style>
+      header {
+        text-align: center;
+      }
+      body {
+        background: black;
+        color: white;
+      }
+      #levelupbuild {
+        display: flex;
+        margin: 10px;
+      }
+      #items,
+      #weapons,
+      #selecteditems,
+      #selectedweapons,
+      #selectedevoweapons {
+        display: flex;
+        flex-wrap: wrap;
+        border: 1px solid white;
+        border-radius: 5px;
+        padding: 5px;
+      }
+      #switchevo {
+        margin-top: auto;
+        margin-bottom: auto;
+      }
+      .item,
+      .weapon,
+      .evoweapon {
+        margin: 2px;
+        position: relative;
+      }
+      .images {
+        width: 3em;
+        height: 3em;
+      }
+      .tooltip-inner {
+        background: rgba(255, 255, 255, 0.608);
+        color: black;
+        border-radius: 6px;
+        padding: 5px 10px 4px;
+      }
+      .frames {
+        width: 3em;
+        height: 3em;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+      }
+    </style>
+  </head>
+  <header><h1>Vampire Survivor Build Simulator</h1></header>
+  <body>
+    <div id="app">
+      <div id="passive">
+        <div id="characters"></div>
+        <div id="stages"></div>
+      </div>
+      <div id="levelupbuild">
+        <div id="items">
+          <!-- アイテム選択 -->
+          <div
+            class="item"
+            v-for="item in items"
+            v-tooltip="item.name"
+            v-on:click="updateitems(item)"
+          >
+            <img v-bind:src="item.image" class="images" />
+            <img
+              v-if="selects.items.indexOf(item) !=-1"
+              v-bind:src="frames.redframe"
+              class="frames"
+            />
+          </div>
+        </div>
+        <div id="weapons">
+          <!-- 武器選択 -->
+          <div
+            class="weapon"
+            v-for="weapon in weapons"
+            v-if="!showevo"
+            v-tooltip="weapon.name"
+            v-on:click="updateweapons(weapon)"
+          >
+            <img v-bind:src="weapon.image" class="images" />
+            <img
+              v-if="selects.weapons.indexOf(weapon) !=-1"
+              v-bind:src="frames.redframe"
+              class="frames"
+            />
+          </div>
+          <!-- 進化武器選択 -->
+          <div
+            class="evoweapon"
+            v-for="evoweapon in evoweapons"
+            v-if="showevo"
+            v-tooltip="evoweapon.name"
+            v-on:click="updateevoweapons(evoweapon)"
+          >
+            <img v-bind:src="evoweapon.image" class="images" />
+            <img
+              v-if="selects.evoweapons.indexOf(evoweapon) !=-1"
+              v-bind:src="frames.redframe"
+              class="frames"
+            />
+          </div>
+          <input
+            type="button"
+            value="switch evo"
+            id="switchevo"
+            v-on:click="toggleweapons"
+          />
+        </div>
+      </div>
+      <div id="selected">
+        <div id="selecteditems" v-if="selects.items.length!=0">
+          <!-- 選択済みアイテム -->
+          <div
+            class="item"
+            v-for="item in selects.items"
+            v-tooltip="item.name"
+            v-on:click="updateitems(item)"
+          >
+            <img v-bind:src="item.image" class="images" />
+          </div>
+        </div>
+        <div id="selectedweapons" v-if="selects.weapons.length!=0">
+          <!-- 選択済み武器 -->
+          <div
+            class="weapon"
+            v-for="weapon in selects.weapons"
+            v-tooltip="weapon.name"
+            v-on:click="updateweapons(weapon)"
+          >
+            <img v-bind:src="weapon.image" class="images" />
+          </div>
+        </div>
+        <div id="selectedevoweapons" v-if="selects.evoweapons.length!=0">
+          <!-- 選択済み進化武器 -->
+          <div
+            class="evoweapon"
+            v-for="evoweapon in selects.evoweapons"
+            v-tooltip="evoweapon.name"
+            v-on:click="updateevoweapons(evoweapon)"
+          >
+            <img v-bind:src="evoweapon.image" class="images" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script src="main.js"></script>
+</html>
